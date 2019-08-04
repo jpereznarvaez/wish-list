@@ -4,7 +4,7 @@ let browser;
 
 const initPuppeteer = async () => {
     if(!browser)
-    browser = await puppeteer.launch({headless: false});
+    browser = await puppeteer.launch({headless: false, defaultViewport: null, args: ['--start-fullscreen']});
     return browser;
 }
 
@@ -15,6 +15,7 @@ const checkService = async () => {
     await page.goto('https://es-la.facebook.com/');
     await page.waitForSelector('#email');
     await page.waitForSelector('#pass');
+
     await page.waitForFunction(function () {
         const selector1 = document.querySelector('#u_0_a')
         const selector2 = document.querySelector('#u_0_2')
@@ -28,7 +29,7 @@ const checkService = async () => {
         const selector2 = document.querySelector('#u_0_2')
     
         if(selector1) return '#u_0_a'
-        else '#u_0_2'
+        else return '#u_0_2'
     });
 
     console.log("hola soy falcao 2", selector)

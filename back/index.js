@@ -1,5 +1,5 @@
 const { initPuppeteer, checkService} = require('./puppeteer');
-const exito = require('./pagesScripts/common/exito);
+const exito = require('./pagesScripts/common/exito');
 
 
 (async function(){
