@@ -1,0 +1,14 @@
+{
+  "name": "shopago",
+  "version": "1.0.0",
+  "description": "Project to make web Scraping in e commerces ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luis Fuentes",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^1.19.0"
+  }
+}
