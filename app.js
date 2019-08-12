@@ -14,15 +14,11 @@ const navbarData = require("./data/nav-bar");
 //Database
 
 //Routes
-const { userRoutes } = require("./users/index");
+const { userRoutes } = require("./user/index");
 
 //Settings
-let frontPath = __dirname.split("/");
-frontPath.pop();
-frontPath.push("front");
-let newFrontPath = frontPath.join("/");
 
-app.set("views", path.join(newFrontPath, "views"));
+app.set("views", path.join(__dirname, "front", "views"));
 app.engine(
   ".hbs",
   expHbs({
@@ -59,7 +55,7 @@ app.use((req, res, next) => {
 });
 
 //Statics files
-app.use(express.static(path.join(newFrontPath, "public")));
+app.use(express.static(path.join(__dirname, "front", "public")));
 
 //Cors
 app.use((req, res, next) => {
@@ -79,9 +75,7 @@ app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 app.get("/", (req, res) => {
   res.render("index");
 });
-
 app.use(userRoutes);
-app.use("/peps", pepsRoutes);
 
 app.get("*", function(req, res) {
   res.render("user/not_found");
