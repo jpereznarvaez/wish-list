@@ -1,56 +1,55 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 
 let browser;
 
 const initPuppeteer = async () => {
-    if(!browser)
-    browser = await puppeteer.launch({headless: false, defaultViewport: null, args: ['--start-fullscreen']});
-    return browser;
-}
-
-
+  if (!browser)
+    browser = await puppeteer.launch({
+      headless: false,
+      defaultViewport: null,
+      args: ["--start-fullscreen"]
+    });
+  return browser;
+};
 
 const checkService = async () => {
-    const page = await browser.newPage();
-    await page.goto('https://es-la.facebook.com/');
-    await page.waitForSelector('#email');
-    await page.waitForSelector('#pass');
+  const page = await browser.newPage();
+  await page.goto("https://es-la.facebook.com/");
+  await page.waitForSelector("#email");
+  await page.waitForSelector("#pass");
 
-    await page.waitForFunction(function () {
-        const selector1 = document.querySelector('#u_0_a')
-        const selector2 = document.querySelector('#u_0_2')
-    
-        if(selector2 || selector1)
-            return true; 
-    });
+  await page.waitForFunction(function() {
+    const selector1 = document.querySelector("#u_0_a");
+    const selector2 = document.querySelector("#u_0_2");
 
-    const selector = await page.evaluate(function () {
-        const selector1 = document.querySelector('#u_0_a')
-        const selector2 = document.querySelector('#u_0_2')
-    
-        if(selector1) return '#u_0_a'
-        else return '#u_0_2'
-    });
+    if (selector2 || selector1) return true;
+  });
 
-    console.log("hola soy falcao 2", selector)
+  const selector = await page.evaluate(function() {
+    const selector1 = document.querySelector("#u_0_a");
+    const selector2 = document.querySelector("#u_0_2");
 
-    await page.type('#email', '')
-    await page.type('#pass', '')
-    await page.click(selector)
+    if (selector1) return "#u_0_a";
+    else return "#u_0_2";
+  });
 
-    await page.waitForSelector("#u_ps_0_5_5 > div > div.clearfix._42ef > div")
-  
+  console.log("hola soy falcao 2", selector);
 
-    await page.close();
-}
+  await page.type("#email", "");
+  await page.type("#pass", "");
+  await page.click(selector);
+
+  await page.waitForSelector("#u_ps_0_5_5 > div > div.clearfix._42ef > div");
+
+  await page.close();
+};
 
 module.exports = {
-
-    checkService,
-    puppeteer,
-    browser,
-    initPuppeteer
-}
+  initPuppeteer,
+  checkService,
+  puppeteer,
+  browser
+};
 
 /*document.querySelectorAll(".exito-product-summary-2-x-clearLink.h-100").forEach(elem => {
 
