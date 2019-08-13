@@ -70,6 +70,7 @@ app.use((req, res, next) => {
 
   next();
 });
+
 app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 
 app.get("/", (req, res) => {

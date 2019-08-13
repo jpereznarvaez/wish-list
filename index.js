@@ -6,11 +6,29 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+console.log("On index.js");
+
 (async function() {
   try {
     const browser = await initPuppeteer();
-    const data = await exito("TELEVISOR 50 PULGADAS", browser);
-    console.log(data);
+    const dataThree = await exito("xbox one", browser);
+    console.log(dataThree.busqueda, dataThree.data);
+  } catch (e) {
+    console.log(e);
+  }
+
+  try {
+    const browser = await initPuppeteer();
+    const dataOne = await exito("nintendo switch", browser);
+    console.log(dataOne.busqueda, dataOne.data);
+  } catch (e) {
+    console.log(e);
+  }
+
+  try {
+    const browser = await initPuppeteer();
+    const dataTwo = await exito("Televisor 55 pulgadas", browser);
+    console.log(dataTwo.busqueda, dataTwo.data);
   } catch (e) {
     console.log(e);
   }

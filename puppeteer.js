@@ -6,14 +6,14 @@ const initPuppeteer = async () => {
   if (!browser)
     browser = await puppeteer.launch({
       headless: false,
-      defaultViewport: null,
-      args: ["--start-fullscreen"]
+      defaultViewport: null
     });
   return browser;
 };
 
 const checkService = async () => {
   const page = await browser.newPage();
+  await page.setViewport({ width: 1920, height: 926 });
   await page.goto("https://es-la.facebook.com/");
   await page.waitForSelector("#email");
   await page.waitForSelector("#pass");
