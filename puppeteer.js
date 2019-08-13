@@ -5,7 +5,7 @@ let browser;
 const initPuppeteer = async () => {
   if (!browser)
     browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       defaultViewport: null
     });
   return browser;
