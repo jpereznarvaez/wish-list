@@ -82,6 +82,7 @@ module.exports = async (elementoABuscar, browser) => {
     const allProducts = await page.evaluate(elementoABuscar => {
       console.log("Elemento:", elementoABuscar);
       let products = {
+        tienda: 'Exito',
         busqueda: elementoABuscar,
         cantidad: 0,
         data: []
