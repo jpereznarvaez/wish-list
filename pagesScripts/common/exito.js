@@ -6,120 +6,135 @@ module.exports = async (elementoABuscar, browser) => {
   console.log("After newPage");
   //await page.setViewport({ width: 1920, height: 926 });
   console.log("After setViewPort");
-  await page.goto("http://www.exito.com/");
-  console.log("After page.goto()");
 
-  await page.waitForFunction(function() {
-    console.log("Begin of waitForFunction searchBar");
-    const searchBar = document.querySelector("#downshift-0-input");
+  try {
+    await page.goto("http://www.exito.com/");
+    console.log("After page.goto()");
 
-    const searchButton = document.querySelector(
-      "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span > span > svg"
-    );
+    await page.waitForFunction(function() {
+      console.log("Begin of waitForFunction searchBar");
+      const searchBar = document.querySelector("#downshift-0-input");
 
-    console.log("TCL: searchBar", searchBar);
-    console.log("TCL: searchButton", searchButton);
+      const searchButton = document.querySelector(
+        "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span > span > svg"
+      );
 
-    if (searchBar && searchButton) return true;
-  });
+      if (searchBar && searchButton) return true;
+    });
 
-  console.log("After waitForFunction searchBar");
+    console.log("After waitForFunction searchBar");
 
-  const mainSearchBar = await page.evaluate(function() {
-    console.log("Begin mainSearchBar");
-    const searchBar = document.querySelector("#downshift-0-input");
-    console.log("TCL: searchBar", searchBar);
+    const mainSearchBar = await page.evaluate(function() {
+      console.log("Begin mainSearchBar");
+      const searchBar = document.querySelector("#downshift-0-input");
 
-    if (searchBar) return "#downshift-0-input";
-  });
+      if (searchBar) return "#downshift-0-input";
+    });
 
-  // await page.waitForFunction(function() {
-  //   const searchButton = document.querySelector(
-  //     "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span"
-  //   );
+    // await page.waitForFunction(function() {
+    //   const searchButton = document.querySelector(
+    //     "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span"
+    //   );
 
-  //   return searchButton;
-  // });
+    //   return searchButton;
+    // });
 
-  const mainSearchButton = await page.evaluate(function() {
-    const searchButton = document.querySelector(
-      "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span > span > svg"
-    );
+    const mainSearchButton = await page.evaluate(function() {
+      const searchButton = document.querySelector(
+        "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span > span > svg"
+      );
 
-    if (searchButton)
-      return "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span > span > svg";
-  });
+      if (searchButton)
+        return "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div > label > div > span > span > svg";
+    });
 
-  console.log("Barra de busqueda: ", mainSearchBar);
-  console.log("Boton busqueda:", mainSearchButton);
+    await page.type(mainSearchBar, elementoABuscar);
+    await page.click(mainSearchButton);
 
-  await page.type(mainSearchBar, elementoABuscar);
-  await page.click(mainSearchButton);
+    await page.waitForFunction(function() {
+      let totalResultSelector = `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`;
 
-  await page.waitForFunction(function() {
-    let totalResultSelector = `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`;
+      if (totalResultSelector) return true;
 
-    return document.querySelector(totalResultSelector);
-  });
+      //return document.querySelector(totalResultSelector);
+    });
 
-  const totalFound = await page.evaluate(() => {
-    let totalResultSelector = `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`;
+    const totalFound = await page.evaluate(() => {
+      let totalResultSelector = `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`;
+      // let notFound = document.querySelector(
+      //   "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
+      // );
 
-    return document.querySelector(totalResultSelector).innerText;
-  });
+      // if (notFound) return "not found";
 
-  console.log("TCL: totalFound", totalFound);
+      return document.querySelector(totalResultSelector).innerText;
+    });
 
-  const allProducts = await page.evaluate(elementoABuscar => {
-    console.log("Elemento:", elementoABuscar);
-    let products = {
-      busqueda: elementoABuscar,
-      data: []
-    };
+    console.log("TCL: totalFound", totalFound);
 
-    const info = document.querySelectorAll(
-      ".exito-product-summary-2-x-information"
-    );
+    // if (totalFound == "not found") {
+    //   await page.close();
+    //   return {
+    //     message: "element not found"
+    //   };
+    // }
 
-    for (let [index, item] of info.entries()) {
-      let product = {};
-      console.log("Index", index);
-      console.log("Item", item);
+    const allProducts = await page.evaluate(elementoABuscar => {
+      console.log("Elemento:", elementoABuscar);
+      let products = {
+        busqueda: elementoABuscar,
+        cantidad: 0,
+        data: []
+      };
 
-      try {
-        product.antes = item.querySelector(
-          ".exito-vtex-components-2-x-listPriceValue"
-        ).innerText;
-      } catch (error) {}
+      const info = document.querySelectorAll(
+        ".exito-product-summary-2-x-information"
+      );
 
-      try {
-        product.ahora = item.querySelector(
-          ".exito-vtex-components-2-x-sellingPrice.dib"
-        ).innerText;
-      } catch (error) {}
+      for (let [index, item] of info.entries()) {
+        let product = {};
+        console.log("Index", index);
+        console.log("Item", item);
 
-      try {
-        product.otro = item.querySelector(
-          ".exito-vtex-components-2-x-alliedPrice.dib"
-        ).innerText;
-      } catch (error) {}
+        try {
+          product.antes = item.querySelector(
+            ".exito-vtex-components-2-x-listPriceValue"
+          ).innerText;
+        } catch (error) {}
 
-      try {
-        product.informacion = item.querySelector(
-          ".exito-vtex-components-2-x-productBrand"
-        ).innerText;
-      } catch (error) {}
+        try {
+          product.ahora = item.querySelector(
+            ".exito-vtex-components-2-x-sellingPrice.dib"
+          ).innerText;
+        } catch (error) {}
 
-      products.data.push(product);
-    }
-    console.log(JSON.stringify(products));
-    return products;
-  }, elementoABuscar);
+        try {
+          product.otro = item.querySelector(
+            ".exito-vtex-components-2-x-alliedPrice.dib"
+          ).innerText;
+        } catch (error) {}
 
-  console.table(allProducts.data);
-  await page.close();
+        try {
+          product.informacion = item.querySelector(
+            ".exito-vtex-components-2-x-productBrand"
+          ).innerText;
+        } catch (error) {}
 
-  return allProducts;
+        products.data.push(product);
+      }
+      //console.log(JSON.stringify(products));
+      products.cantidad = info.length;
+      return products;
+    }, elementoABuscar);
+
+    //console.table(allProducts.data);
+    await page.close();
+
+    return allProducts;
+  } catch (error) {
+    await page.close();
+    return;
+  }
   /*
     document.querySelectorAll(".exito-product-summary-2-x-clearLink.h-100").forEach(elem => {
 

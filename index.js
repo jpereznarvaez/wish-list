@@ -8,28 +8,34 @@ if (process.env.NODE_ENV !== "production") {
 
 console.log("On index.js");
 
-(async function() {
-  try {
-    const browser = await initPuppeteer();
-    const dataThree = await exito("xbox one", browser);
-    console.log(dataThree.busqueda, dataThree.data);
-  } catch (e) {
-    console.log(e);
-  }
+// (async function() {
+//   try {
+//     const browser = await initPuppeteer();
+//     const dataThree = await exito("xbox one", browser);
+//     console.log(dataThree.busqueda, dataThree.data);
+//   } catch (e) {
+//     const browser = await initPuppeteer();
+//     const dataThree = await exito("xbox one", browser);
+//     console.log(dataThree.busqueda, dataThree.data);
+//   }
 
-  try {
-    const browser = await initPuppeteer();
-    const dataOne = await exito("nintendo switch", browser);
-    console.log(dataOne.busqueda, dataOne.data);
-  } catch (e) {
-    console.log(e);
-  }
+//   try {
+//     const browser = await initPuppeteer();
+//     const dataOne = await exito("nintendo switch", browser);
+//     console.log(dataOne.busqueda, dataOne.data);
+//   } catch (e) {
+//     const browser = await initPuppeteer();
+//     const dataOne = await exito("nintendo switch", browser);
+//     console.log(dataOne.busqueda, dataOne.data);
+//   }
 
-  try {
-    const browser = await initPuppeteer();
-    const dataTwo = await exito("Televisor 55 pulgadas", browser);
-    console.log(dataTwo.busqueda, dataTwo.data);
-  } catch (e) {
-    console.log(e);
-  }
-})();
+//   try {
+//     const browser = await initPuppeteer();
+//     const dataTwo = await exito("Televisor 55 pulgadas", browser);
+//     console.log(dataTwo.busqueda, dataTwo.data);
+//   } catch (e) {
+//     const browser = await initPuppeteer();
+//     const dataTwo = await exito("Televisor 55 pulgadas", browser);
+//     console.log(dataTwo.busqueda, dataTwo.data);
+//   }
+// })();

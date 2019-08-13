@@ -14,11 +14,11 @@ const navbarData = require("./data/nav-bar");
 //Database
 
 //Routes
-const { userRoutes } = require("./user/index");
+const { apiRoutes } = require("./api/index");
 
 //Settings
 
-app.set("views", path.join(__dirname, "front", "views"));
+app.set("views", path.join(__dirname, "views"));
 app.engine(
   ".hbs",
   expHbs({
@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 });
 
 //Statics files
-app.use(express.static(path.join(__dirname, "front", "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 //Cors
 app.use((req, res, next) => {
@@ -76,10 +76,10 @@ app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.use(userRoutes);
+app.use("/api", apiRoutes);
 
-app.get("*", function(req, res) {
-  res.render("user/not_found");
-});
+// app.get("*", function(req, res) {
+//   res.render("user/not_found");
+// });
 
 module.exports = app;
