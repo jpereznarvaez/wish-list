@@ -5,9 +5,9 @@ let browser;
 const initPuppeteer = async () => {
   if (!browser)
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       defaultViewport: null,
-      args: ['--no-sandbox']
+      args: ["--no-sandbox"]
     });
   return browser;
 };

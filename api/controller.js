@@ -20,8 +20,12 @@ async function makeSearch(item) {
   const browser = await initPuppeteer();
   const data = await exito(item, browser);
   console.log("TCL: makeSearch -> data", data);
-  if (data.busqueda || data.message) return Promise.resolve(data);
-  else return Promise.reject();
+
+  try {
+    return Promise.resolve(data);
+  } catch (error) {
+    return Promise.reject();
+  }
 }
 
 module.exports = {

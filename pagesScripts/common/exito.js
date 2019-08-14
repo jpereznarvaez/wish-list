@@ -52,11 +52,11 @@ module.exports = async (elementoABuscar, browser) => {
     await page.click(mainSearchButton);
 
     await page.waitForFunction(function() {
-      let totalResultSelector = `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`;
+      let totalResultSelector = document.querySelector(
+        "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)"
+      );
 
       if (totalResultSelector) return true;
-
-      //return document.querySelector(totalResultSelector);
     });
 
     const totalFound = await page.evaluate(() => {
@@ -82,7 +82,7 @@ module.exports = async (elementoABuscar, browser) => {
     const allProducts = await page.evaluate(elementoABuscar => {
       console.log("Elemento:", elementoABuscar);
       let products = {
-        tienda: 'Exito',
+        tienda: "Exito",
         busqueda: elementoABuscar,
         cantidad: 0,
         data: []
@@ -133,6 +133,7 @@ module.exports = async (elementoABuscar, browser) => {
 
     return allProducts;
   } catch (error) {
+    console.log({ error: error });
     await page.close();
     return;
   }
