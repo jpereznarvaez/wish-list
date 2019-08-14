@@ -56,34 +56,48 @@ module.exports = async (elementoABuscar, browser) => {
         "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)"
       );
 
-      if (totalResultSelector) return true;
+      let oppsMessage = document.querySelector(
+        "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
+      );
+
+      if (totalResultSelector || oppsMessage) return true;
     });
 
     const totalFound = await page.evaluate(() => {
-      let totalResultSelector = `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`;
+      try {
+        var totalResultSelector = document.querySelector(
+          `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`
+        ).innerText;
+      } catch (error) {}
+      try {
+        var oppsMessage = document.querySelector(
+          "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
+        ).innerText;
+      } catch (error) {}
       // let notFound = document.querySelector(
       //   "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
       // );
 
       // if (notFound) return "not found";
 
-      return document.querySelector(totalResultSelector).innerText;
+      return totalResultSelector ? totalResultSelector : oppsMessage;
     });
 
     console.log("TCL: totalFound", totalFound);
 
-    // if (totalFound == "not found") {
-    //   await page.close();
-    //   return {
-    //     message: "element not found"
-    //   };
-    // }
+    if (totalFound == "OPS!") {
+      await page.close();
+      return {
+        message: "element not found"
+      };
+    }
 
     const allProducts = await page.evaluate(elementoABuscar => {
       console.log("Elemento:", elementoABuscar);
       let products = {
         tienda: "Exito",
         busqueda: elementoABuscar,
+        message: "ok",
         cantidad: 0,
         data: []
       };
