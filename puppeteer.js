@@ -7,7 +7,7 @@ const initPuppeteer = async () => {
     browser = await puppeteer.launch({
       headless: false,
       defaultViewport: null,
-      args: ["--no-sandbox"]
+      args: ["--no-sandbox", "--start-maximized"]
     });
   return browser;
 };
@@ -57,7 +57,7 @@ module.exports = {
 const info = elem.querySelector('.exito-product-summary-2-x-information');
 
 if(info)
-console.log(info.innerText)
+console.log(info.innerText.trim())
 
 })
  */

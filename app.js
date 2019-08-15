@@ -5,7 +5,7 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const path = require("path");
-const passport = require('passport')
+const passport = require("passport");
 const expHbs = require("express-handlebars");
 const session = require("express-session");
 const redirectToHTTPS = require("express-http-to-https").redirectToHTTPS;
@@ -82,11 +82,11 @@ app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.use('/user', userRoutes)
+app.use("/user", userRoutes);
 app.use("/api", apiRoutes);
 
-app.get("*", function(req, res) {
-res.render("user/not_found");
-});
+// app.get("*", function(req, res) {
+// res.render("user/not_found");
+// });
 
 module.exports = app;

@@ -2,10 +2,22 @@ module.exports = async (elementoABuscar, browser) => {
   console.log("Begin of exito");
 
   const page = await browser.newPage();
-  await page.setViewport({ width: 1920, height: 926 });
+  //await page.setViewport({ width: 1920, height: 1080 });
+  await page.setRequestInterception(true);
+
+  await page.on("request", req => {
+    if (
+      req.resourceType() == "stylesheet" ||
+      req.resourceType() == "font" ||
+      req.resourceType() == "image"
+    ) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+
   console.log("After newPage");
-  //await page.setViewport({ width: 1920, height: 926 });
-  console.log("After setViewPort");
 
   try {
     await page.goto("http://www.exito.com/");
@@ -65,14 +77,19 @@ module.exports = async (elementoABuscar, browser) => {
 
     const totalFound = await page.evaluate(() => {
       try {
-        var totalResultSelector = document.querySelector(
-          `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`
-        ).innerText;
+        var totalResultSelector = document
+          .querySelector(
+            `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`
+          )
+          .innerText.trim();
       } catch (error) {}
       try {
-        var oppsMessage = document.querySelector(
-          "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
-        ).innerText;
+        var oppsMessage = document
+          .querySelector(
+            "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
+          )
+          .innerText.trim()
+          .toLowerCase();
       } catch (error) {}
       // let notFound = document.querySelector(
       //   "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
@@ -85,7 +102,7 @@ module.exports = async (elementoABuscar, browser) => {
 
     console.log("TCL: totalFound", totalFound);
 
-    if (totalFound == "OPS!") {
+    if (totalFound == "ops!") {
       await page.close();
       return {
         message: "element not found"
@@ -112,27 +129,27 @@ module.exports = async (elementoABuscar, browser) => {
         console.log("Item", item);
 
         try {
-          product.antes = item.querySelector(
-            ".exito-vtex-components-2-x-listPriceValue"
-          ).innerText;
+          product.antes = item
+            .querySelector(".exito-vtex-components-2-x-listPriceValue")
+            .innerText.trim();
         } catch (error) {}
 
         try {
-          product.ahora = item.querySelector(
-            ".exito-vtex-components-2-x-sellingPrice.dib"
-          ).innerText;
+          product.ahora = item
+            .querySelector(".exito-vtex-components-2-x-sellingPrice.dib")
+            .innerText.trim();
         } catch (error) {}
 
         try {
-          product.otro = item.querySelector(
-            ".exito-vtex-components-2-x-alliedPrice.dib"
-          ).innerText;
+          product.otro = item
+            .querySelector(".exito-vtex-components-2-x-alliedPrice.dib")
+            .innerText.trim();
         } catch (error) {}
 
         try {
-          product.informacion = item.querySelector(
-            ".exito-vtex-components-2-x-productBrand"
-          ).innerText;
+          product.informacion = item
+            .querySelector(".exito-vtex-components-2-x-productBrand")
+            .innerText.trim();
         } catch (error) {}
 
         products.data.push(product);
@@ -162,13 +179,13 @@ module.exports = async (elementoABuscar, browser) => {
         
         info.forEach(
           item => 
-            console.log('Antes:', item.querySelector('.exito-vtex-components-2-x-listPriceValue').innerText, 
-                        'Ahora:', item.querySelector('.exito-vtex-components-2-x-sellingPrice.dib').innerText, 
-                        'Otro medio de pago:', item.querySelector('.exito-vtex-components-2-x-alliedPrice.dib').innerText, 
-                        'Info:', item.querySelector('.exito-vtex-components-2-x-productBrand').innerText))
+            console.log('Antes:', item.querySelector('.exito-vtex-components-2-x-listPriceValue').innerText.trim(), 
+                        'Ahora:', item.querySelector('.exito-vtex-components-2-x-sellingPrice.dib').innerText.trim(), 
+                        'Otro medio de pago:', item.querySelector('.exito-vtex-components-2-x-alliedPrice.dib').innerText.trim(), 
+                        'Info:', item.querySelector('.exito-vtex-components-2-x-productBrand').innerText.trim()))
 
         if(info)
-        console.log(info.innerText)
+        console.log(info.innerText.trim())
         
         })*/
 
