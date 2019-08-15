@@ -5,6 +5,7 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const path = require("path");
+const passport = require('passport')
 const expHbs = require("express-handlebars");
 const session = require("express-session");
 const redirectToHTTPS = require("express-http-to-https").redirectToHTTPS;
@@ -15,6 +16,7 @@ const navbarData = require("./data/nav-bar");
 
 //Routes
 const { apiRoutes } = require("./api/index");
+const { userRoutes } = require("./user/index");
 
 //Settings
 
@@ -43,14 +45,18 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 app.use(flash());
 
 //Local variables
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash("success_msg");
-  res.locals.error_msg = req.flash("error_msg");
-  res.locals.error = req.flash("error");
-  res.locals.navbar_data = navbarData;
+  app.locals.success_msg = req.flash("success_msg");
+  app.locals.error_msg = req.flash("error_msg");
+  app.locals.error = req.flash("error");
+  app.locals.user = req.user;
+  app.locals.navbar_data = navbarData;
   next();
 });
 
@@ -76,10 +82,11 @@ app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 app.get("/", (req, res) => {
   res.render("index");
 });
+app.use('/user', userRoutes)
 app.use("/api", apiRoutes);
 
-// app.get("*", function(req, res) {
-//   res.render("user/not_found");
-// });
+app.get("*", function(req, res) {
+res.render("user/not_found");
+});
 
 module.exports = app;

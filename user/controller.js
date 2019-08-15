@@ -1,7 +1,5 @@
 const { User } = require("./index");
-const { Card } = require("../card/index");
 const passport = require("passport");
-const moment = require("moment");
 
 const viewRegister = (req, res) => {
   res.render("user/register");

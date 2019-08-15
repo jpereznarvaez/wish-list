@@ -1,22 +1,14 @@
 module.exports = [
   {
-    title: "",
+    title: "Home",
     url: "/"
   },
   {
-    title: "",
+    title: "Wish list",
     url: "/"
   },
   {
-    title: "",
-    url: "/"
-  },
-  {
-    title: "",
-    url: "/"
-  },
-  {
-    title: "",
+    title: "Logout",
     url: "/"
   }
 ];

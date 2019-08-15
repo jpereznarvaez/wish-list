@@ -1,5 +1,4 @@
 const passport = require("passport");
-const mongoose = require("mongoose");
 const localStrategy = require("passport-local").Strategy;
 const { User } = require("../user/index");
 
@@ -79,7 +78,7 @@ passport.use(
         return done(null, false, req.flash("error_msg", "Incorrect Password"));
       }
 
-      done(null, user, req.flash("success_msg", `Welcome ${user.name}`));
+      done(null, user);
     }
   )
 );
