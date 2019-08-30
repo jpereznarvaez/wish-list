@@ -20,15 +20,17 @@ module.exports = async (elementoABuscar, categories = "", browser) => {
   console.log("After newPage");
 
   try {
-    await page.goto("http://www.exito.com/");
+    await page.goto("https://www.alibaba.com/");
     console.log("After page.goto()");
 
     await page.waitForFunction(function() {
       console.log("Begin of waitForFunction searchBar");
-      const searchBar = document.querySelector("#downshift-0-input");
+      const searchBar = document.querySelector(
+        "#J_SC_header > header > div.sc-hd-row.sc-hd-main > div.sc-hd-cell.sc-hd-searchbar-wrap > div > div > form > div.ui-searchbar-main > input"
+      );
 
       const searchButton = document.querySelector(
-        "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div.flex > div > label > div > span > span > svg"
+        "#J_SC_header > header > div.sc-hd-row.sc-hd-main > div.sc-hd-cell.sc-hd-searchbar-wrap > div > div > form > input.ui-searchbar-submit"
       );
 
       if (searchBar && searchButton) return true;
@@ -38,9 +40,12 @@ module.exports = async (elementoABuscar, categories = "", browser) => {
 
     const mainSearchBar = await page.evaluate(function() {
       console.log("Begin mainSearchBar");
-      const searchBar = document.querySelector("#downshift-0-input");
+      const searchBar = document.querySelector(
+        "#J_SC_header > header > div.sc-hd-row.sc-hd-main > div.sc-hd-cell.sc-hd-searchbar-wrap > div > div > form > div.ui-searchbar-main > input"
+      );
 
-      if (searchBar) return "#downshift-0-input";
+      if (searchBar)
+        return "#J_SC_header > header > div.sc-hd-row.sc-hd-main > div.sc-hd-cell.sc-hd-searchbar-wrap > div > div > form > div.ui-searchbar-main > input";
     });
 
     // await page.waitForFunction(function() {
@@ -53,51 +58,54 @@ module.exports = async (elementoABuscar, categories = "", browser) => {
 
     const mainSearchButton = await page.evaluate(function() {
       const searchButton = document.querySelector(
-        "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div.flex > div > label > div > span > span > svg"
+        "#J_SC_header > header > div.sc-hd-row.sc-hd-main > div.sc-hd-cell.sc-hd-searchbar-wrap > div > div > form > div.ui-searchbar-main > input"
       );
 
       if (searchButton)
-        return "#header-container > div.z-5.relative.bg-white.exito-header-2-x-searchBar > div:nth-child(1) > div > div.exito-header-2-x-searchContentWeb > div > div > div.flex > div > label > div > span > span > svg";
+        return "#J_SC_header > header > div.sc-hd-row.sc-hd-main > div.sc-hd-cell.sc-hd-searchbar-wrap > div > div > form > div.ui-searchbar-main > input";
     });
 
     await page.type(mainSearchBar, elementoABuscar);
     await page.click(mainSearchButton);
 
-    await page.waitForFunction(function() {
-      let totalResultSelector = document.querySelector(
-        "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)"
-      );
+    const suscribeResult = await page.waitForFunction(function() {
+      let suscribreSelector = document.querySelector(
+        "#J-m-trade-alert > div > div.J-scc-search.J-ta-section.scc-t-a-search > input.J-search-text.scc-t-a-search-text.ui2-textfield.ui2-textfield-single.ui2-textfield-large"
+      ).placeholder;
 
-      let oppsMessage = document.querySelector(
+      /* let oppsMessage = document.querySelector(
         "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
-      );
+      ); */
 
-      if (totalResultSelector || oppsMessage) return true;
+      if (suscribreSelector /* || oppsMessage */) return suscribreSelector;
     });
+
+    console.log("TCL: suscribreSelector", suscribeResult);
 
     const totalFound = await page.evaluate(() => {
       try {
         var totalResultSelector = document
           .querySelector(
-            `body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery.flex.flex-row.flex-wrap.items-stretch.bn.ph1 > div:nth-child(1)`
+            `body > div.l-page > div.l-page-main-v2 > div.l-main-content > div.l-grid-top > div > div > div.refine-filters__result-section > div.refine-filters__result-left > div > div.seb-refine-result__label > span`
           )
           .innerText.trim();
       } catch (error) {}
-      try {
+
+      /* try {
         var oppsMessage = document
           .querySelector(
             "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
           )
           .innerText.trim()
           .toLowerCase();
-      } catch (error) {}
+      } catch (error) {} */
       // let notFound = document.querySelector(
       //   "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div.flex.flex-grow-1.w-100.flex-column > div:nth-child(5) > div > div.relative.justify-center.flex > div > div.exito-search-result-3-x-resultGallery.search-result-resultado-busqueda > div.exito-search-result-3-x-gallery > div > div.flex.justify-end-ns.justify-center-s.ttu.f1.ph4.pv4-s.pv0-ns.c-muted-3.ph9.b"
       // );
 
       // if (notFound) return "not found";
 
-      return totalResultSelector ? totalResultSelector : oppsMessage;
+      return totalResultSelector ? totalResultSelector : null;
     });
 
     console.log("TCL: totalFound", totalFound);
@@ -114,61 +122,66 @@ module.exports = async (elementoABuscar, categories = "", browser) => {
         console.log("Elemento:", elementoABuscar);
         let products = [];
 
-        const info = document.querySelectorAll(
-          ".exito-product-summary-2-x-information"
+        const productsFounded = document
+          .querySelectorAll(".m-gallery-product-item-wrap")
+          .filter(item => Boolean(item.querySelector(".item-main")));
+
+        const productsWithPrice = productsFounded.filter(item =>
+          Boolean(item.querySelector(".price").innerText)
         );
 
-        const images = document.querySelectorAll(
-          ".exito-product-summary-2-x-imageNormal"
-        );
-
-        for (let [index, item] of info.entries()) {
+        for (let [index, item] of productsWithPrice.entries()) {
           let product = {};
           product.name = elementoABuscar;
-          console.log("Image", images[index].getAttribute("src"));
+
           console.log("Item", item);
 
           /* try {
-          product.antes = item
-            .querySelector(".exito-vtex-components-2-x-listPriceValue")
-            .innerText.trim();
-        } catch (error) {} */
+            product.antes = item
+              .querySelector(".exito-vtex-components-2-x-listPriceValue")
+              .innerText.trim();
+          } catch (error) {} */
 
           try {
-            product.price = item
-              .querySelector(".exito-vtex-components-2-x-sellingPrice.dib")
-              .innerText.trim();
+            product.price =
+              item
+                .querySelector(".price")
+                .childNodes[1].childNodes[2].innerText.trim() || "0";
           } catch (error) {}
 
           try {
-            product.priceFormated = Number(
-              item
-                .querySelector(".exito-vtex-components-2-x-sellingPrice.dib")
-                .innerText.trim()
-                .replace(/\W/g, "")
-            );
+            product.priceFormated =
+              Number(
+                item
+                  .querySelector(".price")
+                  .childNodes[1].childNodes[2].innerText.trim()
+                  .replace("$", "")
+              ) || 0;
           } catch (error) {}
           /* try {
-          product.otro = item
-            .querySelector(".exito-vtex-components-2-x-alliedPrice.dib")
-            .innerText.trim();
-        } catch (error) {} */
+            product.otro = item
+              .querySelector(".exito-vtex-components-2-x-alliedPrice.dib")
+              .innerText.trim();
+          } catch (error) {} */
 
           try {
             product.description = item
-              .querySelector(".exito-vtex-components-2-x-productBrand")
-              .innerText.trim();
+              .querySelector(".title.three-line")
+              .childNodes[1].getAttribute("title")
+              .trim();
           } catch (error) {}
 
           product.quantity = 100;
           product.categories = categories;
-          product.image = images[index].getAttribute("src");
+          product.image = `https:${item
+            .querySelector(".offer-image-box")
+            .childNodes[1].getAttribute("src")
+            .trim()}`;
 
           products.push(product);
         }
 
         //console.log(JSON.stringify(products));
-        products.cantidad = info.length;
         return products;
       },
       elementoABuscar,
@@ -185,25 +198,25 @@ module.exports = async (elementoABuscar, categories = "", browser) => {
     throw Error("Something went wrong");
   }
   /*
-    document.querySelectorAll(".exito-product-summary-2-x-clearLink.h-100").forEach(elem => {
-
-        const info = elem.querySelectorAll('.exito-product-summary-2-x-information') --> forEach;
-        precio de lista --> .exito-vtex-components-2-x-listPriceValue
-        precio de venta --> .exito-vtex-components-2-x-sellingPrice.dib
-        precio otros --> .exito-vtex-components-2-x-alliedPrice.dib
-        descripción --> .exito-vtex-components-2-x-productBrand
-        
-        info.forEach(
-          item => 
-            console.log('Antes:', item.querySelector('.exito-vtex-components-2-x-listPriceValue').innerText.trim(), 
-                        'Ahora:', item.querySelector('.exito-vtex-components-2-x-sellingPrice.dib').innerText.trim(), 
-                        'Otro medio de pago:', item.querySelector('.exito-vtex-components-2-x-alliedPrice.dib').innerText.trim(), 
-                        'Info:', item.querySelector('.exito-vtex-components-2-x-productBrand').innerText.trim()))
-
-        if(info)
-        console.log(info.innerText.trim())
-        
-        })*/
+      document.querySelectorAll(".exito-product-summary-2-x-clearLink.h-100").forEach(elem => {
+  
+          const info = elem.querySelectorAll('.exito-product-summary-2-x-information') --> forEach;
+          precio de lista --> .exito-vtex-components-2-x-listPriceValue
+          precio de venta --> .exito-vtex-components-2-x-sellingPrice.dib
+          precio otros --> .exito-vtex-components-2-x-alliedPrice.dib
+          descripción --> .exito-vtex-components-2-x-productBrand
+          
+          info.forEach(
+            item => 
+              console.log('Antes:', item.querySelector('.exito-vtex-components-2-x-listPriceValue').innerText.trim(), 
+                          'Ahora:', item.querySelector('.exito-vtex-components-2-x-sellingPrice.dib').innerText.trim(), 
+                          'Otro medio de pago:', item.querySelector('.exito-vtex-components-2-x-alliedPrice.dib').innerText.trim(), 
+                          'Info:', item.querySelector('.exito-vtex-components-2-x-productBrand').innerText.trim()))
+  
+          if(info)
+          console.log(info.innerText.trim())
+          
+          })*/
 
   //await page.waitForSelector('')
 
