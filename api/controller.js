@@ -1,20 +1,20 @@
-const { initPuppeteer, checkService } = require("../puppeteer");
-const exito = require("../pagesScripts/common/exito");
-const alibaba = require("../pagesScripts/common/alibaba");
+const { initPuppeteer, checkService } = require('../puppeteer');
+const exito = require('../pagesScripts/common/exito');
+const alibaba = require('../pagesScripts/common/alibaba');
 
-const { Product } = require("../product/index");
+const { Product } = require('../product/index');
 
 const apiSearch = async (req, res) => {
   const { item, categories } = req.query;
-  console.log("TCL: apiSearch -> item", item);
-  console.log("TCL: apiSearch -> category", categories);
+  console.log('TCL: apiSearch -> item', item);
+  console.log('TCL: apiSearch -> category', categories);
 
   try {
     const data = await makeSearch(item, categories);
-    console.log("TCL: apiSearch -> data", data);
+    console.log('TCL: apiSearch -> data', data);
     return res.status(200).json(data);
   } catch (e) {
-    console.log("Entré al error");
+    console.log('Entré al error');
     const data = await makeSearch(item, categories);
     return res.status(200).json(data);
   }
@@ -22,25 +22,25 @@ const apiSearch = async (req, res) => {
 
 const apiSearchAlibaba = async (req, res) => {
   const { item, categories } = req.query;
-  console.log("TCL: apiSearch -> item", item);
-  console.log("TCL: apiSearch -> category", categories);
+  console.log('TCL: apiSearch -> item', item);
+  console.log('TCL: apiSearch -> category', categories);
 
   try {
     const data = await makeSearchAlibaba(item, categories);
-    console.log("TCL: apiSearch -> data", data);
+    console.log('TCL: apiSearch -> data', data);
     return res.status(200).json(data);
   } catch (e) {
-    console.log("Entré al error");
+    console.log('Entré al error');
     const data = await makeSearchAlibaba(item, categories);
     return res.status(200).json(data);
   }
 };
 
-async function makeSearchAlibaba(item, categories = "") {
+async function makeSearchAlibaba(item, categories = '') {
   try {
     const browser = await initPuppeteer();
     const data = await alibaba(item, categories, browser);
-    console.log("TCL: makeSearch -> data", data);
+    console.log('TCL: makeSearch -> data', data);
 
     data.forEach(async product => {
       let newProduct = new Product();
@@ -50,7 +50,7 @@ async function makeSearchAlibaba(item, categories = "") {
       });
 
       if (repet) {
-        console.log("Product already exits");
+        console.log('Product already exits');
       } else {
         newProduct.name = product.name;
         newProduct.description = product.description;
@@ -63,9 +63,9 @@ async function makeSearchAlibaba(item, categories = "") {
         const saved = await newProduct.save();
 
         if (saved) {
-          console.log("Product save");
+          console.log('Product save');
         } else {
-          console.log("Not saved");
+          console.log('Not saved');
         }
       }
     });
@@ -76,11 +76,11 @@ async function makeSearchAlibaba(item, categories = "") {
   }
 }
 
-async function makeSearch(item, categories = "") {
+async function makeSearch(item, categories = '') {
   try {
     const browser = await initPuppeteer();
     const data = await exito(item, categories, browser);
-    console.log("TCL: makeSearch -> data", data);
+    console.log('TCL: makeSearch -> data', data);
 
     data.forEach(async product => {
       let newProduct = new Product();
@@ -90,7 +90,7 @@ async function makeSearch(item, categories = "") {
       });
 
       if (repet) {
-        console.log("Product already exits");
+        console.log('Product already exits');
       } else {
         newProduct.name = product.name;
         newProduct.description = product.description;
@@ -103,9 +103,9 @@ async function makeSearch(item, categories = "") {
         const saved = await newProduct.save();
 
         if (saved) {
-          console.log("Product save");
+          console.log('Product save');
         } else {
-          console.log("Not saved");
+          console.log('Not saved');
         }
       }
     });
@@ -117,20 +117,34 @@ async function makeSearch(item, categories = "") {
 }
 
 const apiSave = async (req, res) => {
-  const newProduct = new Product();
+  try {
+    const {
+      name,
+      description,
+      price,
+      priceFormated,
+      quantity,
+      categories,
+      image
+    } = req.body;
 
-  newProduct.name = "Coco";
-  newProduct.description = "newProduct";
-  newProduct.price = "123";
-  newProduct.priceFormated = 123;
-  newProduct.quantity = 123;
-  newProduct.categories.push("tech");
-  newProduct.image = "url";
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      priceFormated,
+      quantity,
+      categories,
+      image
+    });
 
-  const saved = await newProduct.save();
+    const saved = await newProduct.save();
 
-  if (saved) return res.status(200).json(saved);
-  else res.status(400).json({ error: "Loser" });
+    if (saved) return res.status(200).json(saved);
+    else res.status(400).json({ error: 'Loser v1' });
+  } catch (error) {
+    res.status(500).json({ error: 'Loser v2' });
+  }
 };
 
 module.exports = {
